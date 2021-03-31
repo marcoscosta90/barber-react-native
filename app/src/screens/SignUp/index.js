@@ -1,6 +1,10 @@
 /* eslint-disable prettier/prettier */
-import React, { useState } from 'react';
-import { useNavigation } from '@react-navigation/native'
+import React, { useContext, useState } from 'react';
+import { useNavigation } from '@react-navigation/native';
+import AsyncStorage from '@react-native-community/async-storage';
+
+import { UserContext } from '../../contexts/UserContext';
+
 import {
     Container,
     InputArea,
@@ -11,6 +15,8 @@ import {
     SignMessageButtonTextBold,
 } from './styles';
 
+
+
 import SignInput from '../../components/SignInput';
 
 import BarberLogo from '../../assets/barber.svg';
@@ -20,7 +26,7 @@ import LockIcon from '../../assets/lock.svg';
 import Api from '../../Api';
 
 export default () => {
-
+    const { dispatch: userDispatch } = useContext(UserContext);
     const navigation = useNavigation();
 
 
@@ -29,13 +35,25 @@ export default () => {
     const [passwordField, setPasswordField] = useState('');
 
     const handleSignClick = async () => {
-        if(nameField != '' && emailField != '' && passwordField != '') {
+        if (nameField != '' && emailField != '' && passwordField != '') {
             let res = await Api.signUp(nameField, emailField, passwordField);
-            console.log(res)
-            if(res.token) {
-                alert('Deu certo')
+
+            if (res.token) {
+
+                await AsyncStorage.setItem('token', res.token);
+
+                userDispatch({
+                    type: 'setAvatar',
+                    payload: {
+                        avatar: res.data.avatar
+                    }
+                });
+
+                navigation.reset({
+                    routes: [{ name: 'MainTab' }]
+                });
             } else {
-                alert('Erro: '+ res.error)
+                alert('Erro: ' + res.error)
             }
         } else {
             alert('preencha os campos')
@@ -51,7 +69,7 @@ export default () => {
 
     return (
         <Container>
-            <BarberLogo width="100%" height="160"/>
+            <BarberLogo width="100%" height="160" />
             <InputArea>
                 <SignInput
                     IconSvg={PersonIcon}

@@ -30,28 +30,34 @@ export default () => {
     const [passwordField, setPasswordField] = useState('');
 
     const handleSignClick = async () => {
-       if(emailField != '' && passwordField != ''){
-        let json = await Api.signIn(emailField, passwordField);
-       
-        if(json.token) {
-            await AsyncStorage.setItem('token', json.token);
+        if (emailField != '' && passwordField != '') {
+            let json = await Api.signIn(emailField, passwordField);
 
-            userDispatch({
-                type: 'setAvatar';
-            });
-           
-        } else {
-            alert('email ou senha inválidos')
+            if (json.token) {
+                await AsyncStorage.setItem('token', json.token);
+
+                userDispatch({
+                    type: 'setAvatar',
+                    payload: {
+                        avatar: json.data.avatar
+                    }
+                });
+
+                navigation.reset({
+                    routes: [{ name: 'MainTab' }]
+                });
+            } else {
+                alert('email ou senha inválidos')
+            }
         }
-       }
-       else {
-           alert('preencha os campos')
-       }
+        else {
+            alert('preencha os campos')
+        }
     };
 
     const handleMessageButtonClick = () => {
         navigation.reset({
-            routes: [{name: 'SignUp'}]
+            routes: [{ name: 'SignUp' }]
         });
     };
 
@@ -64,13 +70,13 @@ export default () => {
                     IconSvg={EmailIcon}
                     placeholder="Digite o seu e-mail"
                     value={emailField}
-                    onChangeText={t=>setEmailField(t)}
+                    onChangeText={t => setEmailField(t)}
                 />
                 <SignInput
                     IconSvg={LockIcon}
                     placeholder="Digite sua senha"
                     value={passwordField}
-                    onChangeText={t=>setPasswordField(t)}
+                    onChangeText={t => setPasswordField(t)}
                     password={true}
                 />
                 <CustomButton onPress={handleSignClick}>
