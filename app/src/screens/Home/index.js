@@ -91,12 +91,12 @@ export default () => {
     const onRefresh = () => {
         setRefreshing(false);
         getBarbers();
-    }
+    };
 
     const handleLocationSearch = () => {
         setCoords({});
         getBarbers();
-    }
+    };
 
 
     return (

@@ -1,12 +1,26 @@
 /* eslint-disable prettier/prettier */
 import React from 'react';
-import { Text } from 'react-native';
+import { Button, Text } from 'react-native';
+import { useNavigation } from '@react-navigation/native';
 import { Container } from './styles';
 
+import Api from '../../Api';
+
 export default () => {
+    const navigation = useNavigation();
+
+    const handleLogoutClick = async () => {
+        await Api.logout();
+        navigation.reset({
+            routes: [{name: 'SignIn'}]
+        })
+    }
+
+
     return (
         <Container>
             <Text>Profile</Text>
+            <Button title="Sair" onPress={handleLogoutClick} />
         </Container>
     );
 }
