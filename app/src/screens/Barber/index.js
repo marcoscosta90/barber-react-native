@@ -1,6 +1,5 @@
 /* eslint-disable prettier/prettier */
 import React, { useState, useEffect } from 'react';
-import { Text } from 'react-native';
 import { useNavigation, useRoute } from '@react-navigation/native';
 import Swiper from 'react-native-swiper';
 
@@ -74,7 +73,7 @@ export default () => {
                 setFavorited(json.data.favorited);
 
             } else {
-                alert("Erro:" + json.error)
+                alert("Erro:" + json.error);
             }
             setLoading(false);
         }
@@ -143,7 +142,7 @@ export default () => {
                                 <ServiceItem key={key}>
                                     <ServiceInfo>
                                         <ServiceName>{item.name}</ServiceName>
-                                        <ServicePrice>R${item.price}</ServicePrice>
+                                        <ServicePrice>R${item.price.toFixed(2)}</ServicePrice>
                                     </ServiceInfo>
                                     <ServiceChooseButton onPress={() => handleServiceChoose(key)}>
                                         <ServiceChooseBtnText>Agendar</ServiceChooseBtnText>
